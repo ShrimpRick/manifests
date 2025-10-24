@@ -6,14 +6,15 @@ node default {
   file { '/usr/local/bin/fetch_api.sh':
     ensure  => file,
     mode    => '0755',
-    content => @("API"/L)
+    content => @(END)
       #!/bin/bash
       source /etc/fetch_api.env
-      echo "Fetching data from \$api_url..."
-      curl -s "\$api_url" -o /tmp/api_result.json
+      echo "Fetching data from $api_url..."
+      curl -s "$api_url" -o /tmp/api_result.json
       echo "Saved to /tmp/api_result.json"
-      | API
+      | END
   }
+
 
   exec { 'fetch_api':
     command     => '/usr/local/bin/fetch_api.sh',
