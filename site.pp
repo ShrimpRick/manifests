@@ -9,8 +9,8 @@ node default {
     content => @("API"/L)
       #!/bin/bash
       source /etc/fetch_api.env
-      echo "Fetching data from \$API_URL..."
-      curl -s "\$API_URL" -o /tmp/api_result.json
+      echo "Fetching data from \$api_url..."
+      curl -s "\$api_url" -o /tmp/api_result.json
       echo "Saved to /tmp/api_result.json"
       | API
   }
