@@ -16,8 +16,8 @@ node default {
       | ENV
   }
 
-  # 2️⃣ Maak het fetch script aan
-  file { '/usr/local/bin/fetch_api.sh':
+    # 2️⃣ Maak het fetch script aan
+    file { '/usr/local/bin/fetch_api.sh':
     ensure  => file,
     owner   => 'root',
     group   => 'root',
@@ -25,17 +25,18 @@ node default {
     content => @("SCRIPT"/L)
       #!/bin/bash
       source /etc/fetch_api.env
-
+  
       if [ -z "\$API_URL" ]; then
         echo "ERROR: API_URL is not set in /etc/fetch_api.env"
         exit 1
       fi
-
+  
       echo "Fetching data from \$API_URL..."
       curl -s "\$API_URL" -o /tmp/api_result.json
       echo "Saved to /tmp/api_result.json"
       | SCRIPT
   }
+
 
   # 3️⃣ Voer het script uit
   exec { 'fetch_api':
