@@ -3,7 +3,6 @@ node default {
   # 1️⃣ Controleer dat de env file bestaat (gemaakt door Terraform)
   file { '/etc/fetch_api.env':
     ensure => file,
-    # Optioneel: eigenaarschap en permissies expliciet maken
     owner  => 'root',
     group  => 'root',
     mode   => '0644',
@@ -15,19 +14,19 @@ node default {
     owner   => 'root',
     group   => 'root',
     mode    => '0755',
-    content => @("SCRIPT"/L)
+    content => @(SCRIPT/L)
       #!/bin/bash
       set -euo pipefail
 
       source /etc/fetch_api.env
 
-      if [ -z "\${API_URL:-}" ]; then
+      if [ -z "${API_URL:-}" ]; then
         echo "ERROR: API_URL is not set in /etc/fetch_api.env"
         exit 1
       fi
 
-      echo "Fetching data from \$API_URL..."
-      if curl -sf "\$API_URL" -o /tmp/api_result.json; then
+      echo "Fetching data from $API_URL..."
+      if curl -sf "$API_URL" -o /tmp/api_result.json; then
         echo "Saved to /tmp/api_result.json"
       else
         echo "Failed to fetch API data" >&2
