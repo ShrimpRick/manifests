@@ -37,7 +37,7 @@ node default {
 
   # 3️⃣ Voer het script uit
   exec { 'fetch_api':
-    command     => '/usr/local/bin/fetch_api.sh',
+    command     => '/bin/bash /usr/local/bin/fetch_api.sh',
     path        => ['/bin','/usr/bin','/usr/local/bin'],
     refreshonly => false,
     logoutput   => true,
