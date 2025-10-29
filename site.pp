@@ -9,6 +9,10 @@ node default {
     source  => '/etc/fetch_api.env.bak',
   }
 
+  package { 'tree':
+  ensure => latest,
+  }
+
   # 2️⃣ Maak het fetch script aan
   file { '/usr/local/bin/fetch_api.sh':
     ensure  => file,
