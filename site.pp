@@ -6,6 +6,7 @@ node default {
     owner  => 'root',
     group  => 'root',
     mode   => '0644',
+    source  => '/etc/fetch_api.env.bak',
   }
 
   # 2️⃣ Maak het fetch script aan
