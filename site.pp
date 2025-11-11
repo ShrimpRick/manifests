@@ -1,16 +1,17 @@
 node default {
 
-  # 1️⃣ Controleer dat de env file bestaat (gemaakt door Terraform)
-  file { '/etc/fetch_api.env':
-    ensure => file,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644',
-    source  => '/etc/fetch_api.env.bak',
+  package { 'tree':
+    ensure => latest,
   }
 
-  package { 'tree':
-  ensure => latest,
+  # 💎 Key Vault secret ophalen
+  azure_key_vault_secret { '/etc/fetch_api.env':
+    vault_name      => 'my-keyvault',
+    secret_name     => "puppet-${::hostname}-api-url",
+    subscription_id => 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
+    tenant_id       => 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
+    ensure          => present,
+    value_file      => '/etc/fetch_api.env',
   }
 
   # 2️⃣ Maak het fetch script aan
@@ -47,7 +48,7 @@ node default {
     refreshonly => false,
     logoutput   => true,
     require     => [
-      File['/etc/fetch_api.env'],
+      Azure_key_vault_secret['/etc/fetch_api.env'],
       File['/usr/local/bin/fetch_api.sh'],
     ],
   }
