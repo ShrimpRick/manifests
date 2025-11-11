@@ -7,7 +7,7 @@ node default {
   # 💎 Key Vault secret ophalen
   azure_key_vault_secret { '/etc/fetch_api.env':
     vault_name      => 'my-keyvault',
-    secret_name     => "${::hostname}",
+    secret_name     => $::custom_data['API_URL'],
     subscription_id => 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
     tenant_id       => 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
     ensure          => present,
