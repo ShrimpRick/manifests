@@ -5,7 +5,7 @@ node default {
   }
 
   # 🔹 Haal naam van secret op uit node-specific fact
-  $secret_name = $facts['API_URL']
+  $secret_name = $facts['fetch_secret_name']
 
   # 💎 Haal secret op uit Azure Key Vault op de Puppet Master
   $api_secret = azure_key_vault::secret('keyvaultvyzyr', $secret_name, {
