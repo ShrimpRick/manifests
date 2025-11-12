@@ -4,17 +4,22 @@ node default {
     ensure => latest,
   }
 
-  # 💎 Key Vault secret ophalen
-  azure_key_vault_secret { '/etc/fetch_api.env':
-    vault_name      => 'my-keyvault',
-    secret_name     => $facts['api_url'],
-    subscription_id => 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
-    tenant_id       => 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
-    ensure          => present,
-    value_file      => '/etc/fetch_api.env',
+  # 💎 Haal secret op uit Azure Key Vault
+  $api_secret = azure_key_vault::secret('my-keyvault', $facts['api_url'], {
+    metadata_api_version => '2018-04-02',
+    vault_api_version    => '2016-10-01',
+  })
+
+  # 2️⃣ Schrijf secret naar /etc/fetch_api.env
+  file { '/etc/fetch_api.env':
+    ensure  => file,
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0600',
+    content => "API_URL=${$api_secret.unwrap}\n",
   }
 
-  # 2️⃣ Maak het fetch script aan
+  # 3️⃣ Maak het fetch script aan
   file { '/usr/local/bin/fetch_api.sh':
     ensure  => file,
     owner   => 'root',
@@ -41,14 +46,14 @@ node default {
     | SCRIPT
   }
 
-  # 3️⃣ Voer het script uit
+  # 4️⃣ Voer het script uit na het schrijven van het secret
   exec { 'fetch_api':
     command     => '/bin/bash /usr/local/bin/fetch_api.sh',
     path        => ['/bin','/usr/bin','/usr/local/bin'],
     refreshonly => false,
     logoutput   => true,
     require     => [
-      Azure_key_vault_secret['/etc/fetch_api.env'],
+      File['/etc/fetch_api.env'],
       File['/usr/local/bin/fetch_api.sh'],
     ],
   }
