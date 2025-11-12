@@ -4,19 +4,22 @@ node default {
     ensure => latest,
   }
 
-  # 💎 Haal secret op uit Azure Key Vault
-  $api_secret = azure_key_vault::secret('my-keyvault', $facts['api_url'], {
+  # 🔹 Haal naam van secret op uit node-specific fact
+  $secret_name = $facts['API_URL']
+
+  # 💎 Haal secret op uit Azure Key Vault op de Puppet Master
+  $api_secret = azure_key_vault::secret('keyvaultvyzyr', $secret_name, {
     metadata_api_version => '2018-04-02',
     vault_api_version    => '2016-10-01',
   })
 
-  # 2️⃣ Schrijf secret naar /etc/fetch_api.env
+  # 2️⃣ Schrijf secret naar /etc/fetch_api.env op de agent
   file { '/etc/fetch_api.env':
     ensure  => file,
     owner   => 'root',
     group   => 'root',
     mode    => '0600',
-    content => "API_URL=${$api_secret.unwrap}\n",
+    content => "API_URL=${api_secret.unwrap}\n",
   }
 
   # 3️⃣ Maak het fetch script aan
