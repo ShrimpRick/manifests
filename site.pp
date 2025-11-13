@@ -50,6 +50,17 @@ node default {
         echo "Failed to fetch API data" >&2
         exit 1
       fi
+
+
+      echo "Uploading /tmp/api_result.json to Azure Blob Storage using BLOB_KEY..."
+      # Zorg ervoor dat BLOB_KEY de volledige URL naar de blob bevat:
+      if azcopy copy /tmp/api_result.json "${BLOB_KEY}"; then
+        echo "Successfully uploaded file to ${BLOB_KEY}"
+      else
+        echo "Failed to upload file to ${BLOB_KEY}" >&2
+        exit 1
+      fi
+      
     | SCRIPT
   }
 
