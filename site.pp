@@ -4,6 +4,10 @@ node default {
     ensure => latest,
   }
 
+  package { 'azcopy':
+  ensure => latest,
+}
+
   # 🔹 Haal naam van secret op uit node-specific fact
   $secret_name = $facts['fetch_secret_name']
 
