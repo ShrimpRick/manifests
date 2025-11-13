@@ -4,7 +4,7 @@ node default {
     ensure => latest,
   }
 
-  package { 'azcopy':
+  package { 'azure-storage-azcopy':
   ensure => latest,
 }
 
