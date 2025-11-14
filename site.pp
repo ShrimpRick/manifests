@@ -8,6 +8,37 @@ node default {
   ensure => latest,
 }
 
+  exec { 'download_azcopy':
+    command => 'wget https://aka.ms/downloadazcopy-v10-linux -O /tmp/downloadazcopy-v10-linux',
+    creates => '/tmp/downloadazcopy-v10-linux',
+    path    => ['/usr/bin', '/bin'],
+  }
+  
+  exec { 'extract_azcopy':
+    command => 'tar -xvf /tmp/downloadazcopy-v10-linux -C /tmp',
+    creates => '/tmp/azcopy_linux_amd64_10.31.0',
+    require => Exec['download_azcopy'],
+    path    => ['/usr/bin', '/bin'],
+  }
+  
+  exec { 'move_azcopy_to_bin':
+    command => 'sudo mv /tmp/azcopy_linux_amd64_10.31.0/azcopy /usr/local/bin/',
+    creates => '/usr/local/bin/azcopy',
+    require => Exec['extract_azcopy'],
+    path    => ['/usr/bin', '/bin'],
+  }
+  
+  exec { 'check_azcopy_version':
+    command => 'azcopy --version',
+    unless  => 'azcopy --version | grep -q "10.31.0"',
+    require => Exec['move_azcopy_to_bin'],
+    path    => ['/usr/bin', '/bin'],
+  }
+
+
+
+
+
   # 🔹 Haal naam van secret op uit node-specific fact
   $secret_name = $facts['fetch_secret_name']
 
