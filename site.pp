@@ -80,13 +80,8 @@ exec { 'check_azcopy_version':
         exit 1
       fi
 
-      source /etc/blob_key.env
 
 
-      if [ -z "${BLOB_KEY:-}" ]; then
-        echo "ERROR: BLOB_KEY is not set in /etc/blob_key.env"
-        exit 1
-      fi
 
       echo "Uploading /tmp/api_result.json to Azure Blob Storage using BLOB_KEY..."
       # Zorg ervoor dat BLOB_KEY de volledige URL naar de blob bevat:
