@@ -103,7 +103,6 @@ exec { 'check_azcopy_version':
     logoutput   => true,
     require     => [
       File['/etc/fetch_api.env'],
-      File['/etc/blob_key.env'],
       File['/usr/local/bin/fetch_api.sh'],
     ],
   }
