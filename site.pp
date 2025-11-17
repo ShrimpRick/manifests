@@ -4,9 +4,6 @@ node default {
     ensure => latest,
   }
 
-  package { 'azure-storage-azcopy':
-  ensure => latest,
-}
 
 exec { 'download_azcopy':
   command => 'wget https://aka.ms/downloadazcopy-v10-linux -O /tmp/downloadazcopy-v10-linux',
