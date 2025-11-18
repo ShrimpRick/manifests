@@ -63,6 +63,7 @@ exec { 'check_azcopy_version':
       set -euo pipefail
 
       source /etc/fetch_api.env
+      source /etc/blob_key.env
 
       if [ -z "${API_URL:-}" ]; then
         echo "ERROR: API_URL is not set in /etc/fetch_api.env"
@@ -76,7 +77,6 @@ exec { 'check_azcopy_version':
         echo "Failed to fetch API data" >&2
         exit 1
       fi
-
 
 
 
@@ -100,6 +100,7 @@ exec { 'check_azcopy_version':
     logoutput   => true,
     require     => [
       File['/etc/fetch_api.env'],
+      File['/etc/blob_key.env'],
       File['/usr/local/bin/fetch_api.sh'],
     ],
   }
