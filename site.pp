@@ -52,13 +52,14 @@ exec { 'check_azcopy_version':
     mode    => '0600',
     content => "API_URL=${api_secret.unwrap}\n",
   }
-  file { '/etc/blob_key.env':
-    ensure  => file,
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0600',
-    content => "export BLOB_KEY=${blob_key}\n",
-  }
+file { '/etc/blob_key.env':
+  ensure  => file,
+  owner   => 'root',
+  group   => 'root',
+  mode    => '0600',
+  content => "BLOB_KEY=\"${blob_key}\"\n",
+}
+
 
   # 3️⃣ Maak het fetch script aan
   file { '/usr/local/bin/fetch_api.sh':
