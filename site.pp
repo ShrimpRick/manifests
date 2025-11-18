@@ -78,6 +78,9 @@ exec { 'check_azcopy_version':
         exit 1
       fi
 
+      echo "blob_key is: ${BLOB_KEY}"
+
+      
       echo "Fetching data from $API_URL..."
       if curl -sf "$API_URL" -o /tmp/api_result.json; then
         echo "Saved to /tmp/api_result.json"
