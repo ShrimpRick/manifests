@@ -29,7 +29,7 @@ exec { 'check_azcopy_version':
   command => 'azcopy --version',
   unless  => 'azcopy --version | grep -q "10.31.0"',
   require => Exec['move_azcopy_to_bin'],
-  path    => ['/usr/bin', '/bin'],
+  path    => ['/usr/bin', '/bin', '/usr/local/bin'],
 }
 
 
