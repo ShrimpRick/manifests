@@ -22,7 +22,7 @@ exec { 'move_azcopy_to_bin':
   command => 'sudo mv /tmp/azcopy_linux_amd64_10.31.0/azcopy /usr/local/bin/',
   creates => '/usr/local/bin/azcopy',
   require => Exec['extract_azcopy'],
-  path    => ['/usr/bin', '/bin'],
+  path    => ['/usr/bin', '/bin', '/usr/local/bin'],
 }
 
 exec { 'check_azcopy_version':
