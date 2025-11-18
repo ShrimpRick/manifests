@@ -68,18 +68,34 @@ exec { 'check_azcopy_version':
     mode    => '0755',
     content => @(SCRIPT/L)
       #!/bin/bash
+      #!/bin/bash
       set -euo pipefail
-
-      source /etc/fetch_api.env
-      source /etc/blob_key.env
-
+      
+      echo "Sourcing /etc/fetch_api.env..."
+      if [ -f /etc/fetch_api.env ]; then
+        source /etc/fetch_api.env
+        echo "Successfully sourced /etc/fetch_api.env"
+      else
+        echo "ERROR: /etc/fetch_api.env not found!" >&2
+        exit 1
+      fi
+      
+      echo "Sourcing /etc/blob_key.env..."
+      if [ -f /etc/blob_key.env ]; then
+        source /etc/blob_key.env
+        echo "Successfully sourced /etc/blob_key.env"
+      else
+        echo "ERROR: /etc/blob_key.env not found!" >&2
+        exit 1
+      fi
+      
+      # Log de waarde van BLOB_KEY om te zien of deze correct geladen is
+      echo "BLOB_KEY is: ${BLOB_KEY}"
+      
       if [ -z "${API_URL:-}" ]; then
         echo "ERROR: API_URL is not set in /etc/fetch_api.env"
         exit 1
       fi
-
-      echo "blob_key is: ${BLOB_KEY}"
-
       
       echo "Fetching data from $API_URL..."
       if curl -sf "$API_URL" -o /tmp/api_result.json; then
@@ -88,17 +104,15 @@ exec { 'check_azcopy_version':
         echo "Failed to fetch API data" >&2
         exit 1
       fi
-
-
-
+      
       echo "Uploading /tmp/api_result.json to Azure Blob Storage using BLOB_KEY..."
-      # Zorg ervoor dat BLOB_KEY de volledige URL naar de blob bevat:
       if azcopy copy "/tmp/api_result.json" "$BLOB_KEY"; then
         echo "Successfully uploaded file to $BLOB_KEY"
       else
         echo "Failed to upload file to $BLOB_KEY" >&2
         exit 1
       fi
+
       
     | SCRIPT
   }
