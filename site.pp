@@ -36,6 +36,7 @@ exec { 'check_azcopy_version':
 
   # 🔹 Haal naam van secret op uit node-specific fact
   $secret_name = $facts['fetch_secret_name']
+  $blob_key = $facts['blob_key']
 
   # 💎 Haal secret op uit Azure Key Vault op de Puppet Master
   $api_secret = azure_key_vault::secret('keyvaultvyzyr', $secret_name, {
@@ -50,6 +51,13 @@ exec { 'check_azcopy_version':
     group   => 'root',
     mode    => '0600',
     content => "API_URL=${api_secret.unwrap}\n",
+  }
+  file { '/etc/blob_key.env':
+    ensure  => file,
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0600',
+    content => "BLOB_KEY=${blob_key}\n",
   }
 
   # 3️⃣ Maak het fetch script aan
