@@ -57,7 +57,7 @@ exec { 'check_azcopy_version':
     owner   => 'root',
     group   => 'root',
     mode    => '0600',
-    content => "BLOB_KEY=${blob_key}\n",
+    content => "export BLOB_KEY=${blob_key}\n",
   }
 
   # 3️⃣ Maak het fetch script aan
